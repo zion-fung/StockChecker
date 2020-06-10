@@ -11,13 +11,12 @@ if (argv.f && argv.file) {
 
 (async () => {
     let filepath = argv.f ? argv.f : argv.file;
-    if (!filepath) {
-        stores.resetStores(); // No file given means run on all stores
+    let emailText = null;
+    if (filepath) {
+        const storeList = require(`./${filepath}`);
+        emailText = await stores.main(storeList);
     } else {
-        // Run on specific stores
-        const storeFile = require(`./${filepath}`);
-        stores.setStores(storeFile);
+        emailText = await stores.main([]);
     }
-    const emailText = await stores.main();
     await emailer.main(emailText);
 })();

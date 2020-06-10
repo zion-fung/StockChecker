@@ -1,29 +1,22 @@
 const kotn = require("./kotn");
 const powerblock = require("./powerblock");
 
-const storeList = [kotn, powerblock];
-const storeStrings = {};
-for (const store of storeList) {
-    storeStrings[store.STORE_NAME] = store;
-}
-
-let stores = []
-
-function resetStores() {
-    stores = storeList.slice(0);
-}
-
-function setStores(storeList) {
-    stores = [];
-    for (const store of storeList) {
-        stores.push(storeStrings[store]);
-    }
-}
+const stores = [kotn, powerblock];
 
 let notifications = [];
 
-async function main() {
+async function main(activeStores) {
+    let inactiveStores = new Set();
+    if (activeStores.length > 0) {
+        inactiveStores = new Set(stores.map(store => store.STORE_NAME));
+        for (const store of activeStores) {
+            inactiveStores.delete(store);
+        }
+    }
     for (const store of stores) {
+        if (inactiveStores.has(store.STORE_NAME)) {
+            continue;
+        }
         const itemResults = await store.main();
         const storeName = store.STORE_NAME;
         let items = ["----------", `Store: ${storeName}`, "---"];
@@ -53,8 +46,6 @@ async function main() {
 }
 
 module.exports = {
-    resetStores,
-    setStores,
     main
 };
 
@@ -64,7 +55,7 @@ Store: Kotn
 ---
 Item: Essential Crew T-Shirt
 Colors:
-- (Link) Heather Grey: In Stock 
+- (Link) Heather Grey: In Stock
 - (Link) Navy: In Stock
 - (Link) Army Green: Out of Stock
 - (Link) Charcoal Melange: Out of Stock
