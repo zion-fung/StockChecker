@@ -24,7 +24,7 @@ async function main() {
         let stock = await stockElement.innerText();
         stock = stock.toLowerCase();
         if (stock === "out of stock" || stock === "available on backorder") {
-            results["Sports Bench"].stock = false;
+            results["Sport Bench"].stock = false;
         }
     } catch (error) {
         console.log(error);
