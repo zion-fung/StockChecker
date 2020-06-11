@@ -19,4 +19,5 @@ if (argv.f && argv.file) {
         emailText = await stores.main([]);
     }
     await emailer.main(emailText);
+    process.exit();
 })();
