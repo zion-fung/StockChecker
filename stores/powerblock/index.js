@@ -1,6 +1,10 @@
 const proSeries = require("./pro-series");
+const kettlebellHandle = require("./kettlebell-handle");
+const sportBench = require("./sport-bench");
+const straightBar = require("./straight-bar");
+const travelBench = require("./travel-bench");
 
-const items = [proSeries];
+const items = [kettlebellHandle, straightBar, sportBench, travelBench];
 
 const STORE_NAME = "Powerblock";
 

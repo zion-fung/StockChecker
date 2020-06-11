@@ -30,7 +30,7 @@ async function main(activeStores) {
             if (Object.keys(itemResult.results).length === 1) {
                 const key = Object.keys(itemResult.results)[0];
                 const stock = itemResult.results[key].stock === true ? "In Stock" : "Out of Stock";
-                items.push(`- (<a href=${itemResult.results[color].link}>Link</a>): ${stock}`);
+                items.push(`- (<a href=${itemResult.results[key].link}>Link</a>): ${stock}`);
                 continue;
             }
             items.push(`${store.ITEM_DESCRIPTOR}:`);

@@ -26,6 +26,7 @@ async function main() {
         const context = await browser.newContext();
         const page = await context.newPage();
         await page.goto(url);
+        await page.waitForSelector(".product_title");
         await page.selectOption("select#pa_dumbbell-type", "expandable");
 
         await page.selectOption("select#pa_weight", "5-50");
