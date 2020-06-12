@@ -5,7 +5,10 @@ const stores = [kotn, powerblock];
 
 let notifications = [];
 
-async function main(activeStores) {
+// activeStores: List[String] - List of stores to check
+// outputHtml: boolean - whether to output html or plaintext (for emails and texts respectively)
+async function main(activeStores, outputHtml) {
+    // Create list of inactivate stores to filter out the store list
     let inactiveStores = new Set();
     if (activeStores.length > 0) {
         inactiveStores = new Set(stores.map(store => store.STORE_NAME));
@@ -13,6 +16,8 @@ async function main(activeStores) {
             inactiveStores.delete(store);
         }
     }
+
+    // Loop through each store and add the output line by line
     for (const store of stores) {
         if (inactiveStores.has(store.STORE_NAME)) {
             continue;
@@ -29,18 +34,33 @@ async function main(activeStores) {
             // When there's only 1 "color" or there aren't different colors
             if (Object.keys(itemResult.results).length === 1) {
                 const key = Object.keys(itemResult.results)[0];
-                const stock = itemResult.results[key].stock === true ? "In Stock" : "Out of Stock";
-                items.push(`- (<a href=${itemResult.results[key].link}>Link</a>): ${stock}`);
+                const stock = itemResult.results[key].stock ? "In Stock" : "Out of Stock";
+                if (outputHtml) {
+                    items.push(`- (<a href=${itemResult.results[key].link}>Link</a>): ${stock}`);
+                } else {
+                    items.push(`- Status: ${stock}`);
+                    items.push(`- Link: ${itemResult.results[key].link}`)
+                }
                 continue;
             }
             items.push(`${store.ITEM_DESCRIPTOR}:`);
-            for (const color in itemResult.results) {
-                const stock = itemResult.results[color].stock === true ? "In Stock" : "Out of Stock";
-                items.push(`- (<a href=${itemResult.results[color].link}>Link</a>) ${color}: ${stock}`);
+            for (const res in itemResult.results) {
+                const stock = itemResult.results[res].stock ? "In Stock" : "Out of Stock";
+                if (outputHtml) {
+                    items.push(`- (<a href=${itemResult.results[res].link}>Link</a>) ${res}: ${stock}`);
+                } else {
+                    items.push(`- ${res}: ${stock} | Link: ${itemResult.results[res].link}`)
+                }
             }
         }
-        notifications.push(`${items.map(item => `<p>${item}</p>`).join("\n")}`);
+        if (outputHtml) {
+            notifications.push(items.map(item => `<p>${item}</p>`).join("\n"));
+        } else {
+            notifications.push(items.join("\n"));
+        }
     }
+
+    // Format the output
     const output = notifications.join("\n");
     return output;
 }
