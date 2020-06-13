@@ -4,7 +4,9 @@ const texter = require("./texter");
 
 const stores = require("./stores/");
 
-const argv = require('minimist')(process.argv.slice(2));
+const argvDefaults = { nospam: false };
+
+const argv = require('minimist')(process.argv.slice(2), { default: argvDefaults });
 
 if (argv.f && argv.file) {
     console.log("Error: Can't have both -f and --file");
@@ -17,19 +19,29 @@ if (argv.m && argv.method) {
 }
 
 (async () => {
+    // If the nospam flag is set, don't send an email/text if nothing is in stock
+    const nospam = argv.nospam;
     const filepath = argv.f ? argv.f : argv.file;
     let html = null;
     if (filepath) {
         const storeList = require(`./${filepath}`);
-        html = await stores.main(storeList, true);
+        message = await stores.main(storeList, true, nospam);
     } else {
-        html = await stores.main([], false);
+        message = await stores.main([], false, nospam);
     }
+
+    // If nospam is set, then there might be no output. If there isn't don't send an email/text
+    if (message.length === 0) {
+        return;
+    }
+
+    console.log(message);
+    return;
 
     const method = argv.m ? argv.m : argv.method;
     if (!method || method === "email") {
-        await emailer.sendEmail(html);
+        await emailer.sendEmail(message);
     } else {
-        await texter.sendMessage(html);
+        await texter.sendMessage(message);
     }
 })();
