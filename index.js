@@ -22,23 +22,21 @@ if (argv.m && argv.method) {
     // If the nospam flag is set, don't send an email/text if nothing is in stock
     const nospam = argv.nospam;
     const filepath = argv.f ? argv.f : argv.file;
-    let html = null;
-    if (filepath) {
-        const storeList = require(`${filepath}`);
-        message = await stores.main(storeList, true, nospam);
-    } else {
-        message = await stores.main([], false, nospam);
-    }
-
-    // If nospam is set, then there might be no output. If there isn't don't send an email/text
-    if (message.length === 0) {
-        return;
-    }
-    
     const method = argv.m ? argv.m : argv.method;
+    const storeList = filepath ? require(filepath) : [];
+
+    // Get html results for email, plaintext for texting
     if (!method || method === "email") {
+        const message = await stores.main(storeList, true, nospam);
+        if (message.length === 0) { // If nospam is sent and the message is empty, don't send anything
+            return;
+        }
         await emailer.sendEmail(message);
     } else {
+        const message = await stores.main(storeList, false, nospam);
+        if (message.length === 0) { // If nospam is sent and the message is empty, don't send anything
+            return;
+        }
         await texter.sendMessage(message);
     }
     process.exit();
