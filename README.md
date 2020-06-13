@@ -1,5 +1,5 @@
 # StockChecker
-Checks certain sites to see if a product is in stock, then emails the results
+Checks certain sites to see if a product is in stock, then emails or texts the results
 
 ```
 /* Sample output
@@ -20,20 +20,21 @@ Colors:
 - Stores: Outer Folder containing 1 folder per store
     - Kotn: Store reprsenting the store Kotn
         - Essential Crew: Item that we're checking for inside the above store
-- Emailer: Folder containing index simple nodemailer file for sending emails
+- Emailer: Folder containing simple nodemailer file for sending emails, and a file to convert message objects for possible future improvements
+- Texter: Folder containing simple file using Twilio's SMS Api to send texts
 - ...
 
 ### Dependencies
 - minimist: used for parsing cmd line args
 - nodemailer: used for sending email notifications
 - playwright: although primarily used for browser automation testing, used here for scraping in headless mode
+- twilio: used for sending texts
 
 ### Raspberry PI 4 Support
 Written to run on Windows 10, but with a few modifications it can run easily to run on a rpi4.
 
 - Step 1: Add the "executablePath" argument to chromium.launch() --> ```{ executablePath: "/bin/chromium-browser" }```
 - Step 2 (Optional): Add process.exit() in the root folder's index.js file since closing chromium on the rpi4 is very slow.
-- Step 3: Change the relative path in the root index.js to an absolute path.
 
 ### Running the program
 

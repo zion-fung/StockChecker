@@ -24,7 +24,7 @@ if (argv.m && argv.method) {
     const filepath = argv.f ? argv.f : argv.file;
     let html = null;
     if (filepath) {
-        const storeList = require(`./${filepath}`);
+        const storeList = require(`${filepath}`);
         message = await stores.main(storeList, true, nospam);
     } else {
         message = await stores.main([], false, nospam);
