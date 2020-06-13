@@ -33,6 +33,7 @@ Written to run on Windows 10, but with a few modifications it can run easily to 
 
 - Step 1: Add the "executablePath" argument to chromium.launch() --> ```{ executablePath: "/bin/chromium-browser" }```
 - Step 2 (Optional): Add process.exit() in the root folder's index.js file since closing chromium on the rpi4 is very slow.
+- Step 3: Change the relative path in the root index.js to an absolute path.
 
 ### Running the program
 
@@ -44,9 +45,15 @@ If a json file is provided, then only those stores will be checked. If no file i
 - email_user: the email that will be used to send the emails
 - email_pass: the password of the above email
 - email_dest: where you want the emails to be sent
+- twilioAccountSID: account sid for twilio
+- twilioAuthToken: auth token for twilio
+- twilioSenderNumber: number attached to twilio account
+- twilioReceiverNumber: number to receive messages from twilio
 
 #### CLI Args
 - -f or --file: a json file in the form of a list that contains the stores you want to check (make sure the names match the STORE_NAME variable in each store's index file)
+- -m or --method: either "email" or "text" for emails or text messages
+- --nospam: if this option is set, then a notification is only sent if a store has items in stock.
 
 ### Adding more stores
 
@@ -73,6 +80,10 @@ The item index file should have the same foundation (errors, return format, inti
     }
 }
 ```
+
+### How the texting works
+
+The texting just uses Twilio's SMS API for Node.js. It takes in a body, and uses env variables to create the client and to determine where to send it.
 
 ### How the emailing works (and how it might be improved)
 
