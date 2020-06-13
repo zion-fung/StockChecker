@@ -3,15 +3,15 @@ const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-        user: process.env.email_user,
-        pass: process.env.email_pass
+        user: process.env.emailUser,
+        pass: process.env.emailPass
     }
 });
 
-async function main(html) {
+async function sendEmail(html) {
     let mailOptions = {
-        from: process.env.email_user,
-        to: process.env.email_dest,
+        from: process.env.emailUser,
+        to: process.env.emailDest,
         subject: "StockChecker Alert",
         html: html
     };
@@ -21,4 +21,4 @@ async function main(html) {
     console.log("Message sent: %s", info.messageId);
 }
 
-module.exports = { main };
+module.exports = { sendEmail };

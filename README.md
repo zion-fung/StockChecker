@@ -1,5 +1,5 @@
 # StockChecker
-Checks certain sites to see if a product is in stock, then emails the results
+Checks certain sites to see if a product is in stock, then emails or texts the results
 
 ```
 /* Sample output
@@ -20,13 +20,15 @@ Colors:
 - Stores: Outer Folder containing 1 folder per store
     - Kotn: Store reprsenting the store Kotn
         - Essential Crew: Item that we're checking for inside the above store
-- Emailer: Folder containing index simple nodemailer file for sending emails
+- Emailer: Folder containing simple nodemailer file for sending emails, and a file to convert message objects for possible future improvements
+- Texter: Folder containing simple file using Twilio's SMS Api to send texts
 - ...
 
 ### Dependencies
 - minimist: used for parsing cmd line args
 - nodemailer: used for sending email notifications
 - playwright: although primarily used for browser automation testing, used here for scraping in headless mode
+- twilio: used for sending texts
 
 ### Raspberry PI 4 Support
 Written to run on Windows 10, but with a few modifications it can run easily to run on a rpi4.
@@ -44,9 +46,15 @@ If a json file is provided, then only those stores will be checked. If no file i
 - email_user: the email that will be used to send the emails
 - email_pass: the password of the above email
 - email_dest: where you want the emails to be sent
+- twilioAccountSID: account sid for twilio
+- twilioAuthToken: auth token for twilio
+- twilioSenderNumber: number attached to twilio account
+- twilioReceiverNumber: number to receive messages from twilio
 
 #### CLI Args
 - -f or --file: a json file in the form of a list that contains the stores you want to check (make sure the names match the STORE_NAME variable in each store's index file)
+- -m or --method: either "email" or "text" for emails or text messages
+- --nospam: if this option is set, then a notification is only sent if a store has items in stock.
 
 ### Adding more stores
 
@@ -73,6 +81,10 @@ The item index file should have the same foundation (errors, return format, inti
     }
 }
 ```
+
+### How the texting works
+
+The texting just uses Twilio's SMS API for Node.js. It takes in a body, and uses env variables to create the client and to determine where to send it.
 
 ### How the emailing works (and how it might be improved)
 
