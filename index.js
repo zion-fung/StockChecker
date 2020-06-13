@@ -35,9 +35,6 @@ if (argv.m && argv.method) {
         return;
     }
 
-    console.log(message);
-    return;
-
     const method = argv.m ? argv.m : argv.method;
     if (!method || method === "email") {
         await emailer.sendEmail(message);
