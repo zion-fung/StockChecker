@@ -6,19 +6,19 @@ async function main() {
     let results = {
         "Heather Grey": {
             stock: true,
-            link: "https://us.kotn.com/collections/mens/products/mens-essential-crew?variant=20428653920310"
+            link: "https://ca.kotn.com/collections/mens-tshirts/products/mens-essential-crew-in-heather-grey"
         },
         "Navy": {
             stock: true,
-            link: "https://us.kotn.com/collections/mens/products/mens-essential-crew?variant=31081293316150"
+            link: "https://ca.kotn.com/collections/mens-tshirts/products/mens-essential-crew-in-navy"
         },
         "Army Green": {
             stock: true,
-            link: "https://us.kotn.com/collections/mens/products/mens-essential-crew?variant=20420198858806"
+            link: "https://ca.kotn.com/collections/mens-tshirts/products/mens-essential-crew-in-army-green"
         },
         "Charcoal Melange": {
             stock: true,
-            link: "https://us.kotn.com/collections/mens/products/mens-essential-crew?variant=31081239085110"
+            link: "https://ca.kotn.com/collections/mens-tshirts/products/mens-essential-crew-in-charcoal-melange"
         },
     };
     let isError = false;
@@ -30,10 +30,13 @@ async function main() {
         for (const color in results) {
             const url = results[color].link;
             await page.goto(url);
-            const mediumButton = await page.$("#m");
-            const isDisabled = await mediumButton.evaluate(node => node.disabled);
-            if (isDisabled) {
-                results[color].stock = false;
+            const inStockSizes = await page.$$(".sc-AxiKw.iEIuqc");
+            for (const size of inStockSizes) {
+                const text = await size.innerText();
+                if (text === "M") {
+                    results[color].stock = false;
+                    break;
+                }
             }
         }
     } catch (error) {
