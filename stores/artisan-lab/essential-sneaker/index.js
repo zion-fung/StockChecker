@@ -12,7 +12,7 @@ async function main() {
     let isError = false;
     let browser = null;
     try {
-        browser = await chromium.launch(); // add executablePath for rpi 4
+        browser = await chromium.launch({ executablePath: "/bin/chromium-browser" }); // add executablePath for rpi 4
         const context = await browser.newContext();
         const page = await context.newPage();
         for (const color in results) {
