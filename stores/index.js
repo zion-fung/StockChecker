@@ -1,7 +1,8 @@
 const kotn = require("./kotn");
 const powerblock = require("./powerblock");
+const artisanLab = require("./artisan-lab");
 
-const stores = [kotn, powerblock];
+const stores = [kotn, powerblock, artisanLab];
 
 let notifications = [];
 
